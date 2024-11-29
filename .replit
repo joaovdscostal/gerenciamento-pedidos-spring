@@ -1,3 +1,2 @@
 language = "java19"
-run = "mvn clean install"
-healthCheckPath = “/actuator/health”
+run = "mvn clean install java -jar target/gerenciamento-pedidos-0.0.1-SNAPSHOT.jar"
