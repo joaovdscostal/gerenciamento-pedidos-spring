@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -28,10 +31,22 @@ public class SecurityConfig {
         return httpSecurity
                 .securityMatcher(new AntPathRequestMatcher("/api/**"))
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable) // Desativa CORS
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .userDetailsService(usuarioService)
                 .httpBasic(withDefaults())
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin("*"); // Permitir todas as origens (caso necessário)
+        configuration.addAllowedMethod("*"); // Permitir todos os métodos (GET, POST, etc.)
+        configuration.addAllowedHeader("*"); // Permitir todos os cabeçalhos
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
